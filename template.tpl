@@ -1,4 +1,4 @@
-___TERMS_OF_SERVICE___
+﻿___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -59,10 +59,6 @@ ___TEMPLATE_PARAMETERS___
       {
         "displayValue": "Link Click Tracking",
         "value": "linkTracking"
-      },
-      {
-        "displayValue": "Consent",
-        "value": "trackConsent"
       },
       {
         "displayValue": "Page View",
@@ -135,11 +131,6 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "eventType",
         "type": "EQUALS",
         "paramValue": "trackTiming"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackConsent"
       },
       {
         "paramName": "eventType",
@@ -656,91 +647,6 @@ ___TEMPLATE_PARAMETERS___
                   }
                 ],
                 "defaultValue": "category",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#consent-tracking\"\u003eRead more\u003c/a\u003e about tracking Consent status.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackConsent"
-          }
-        ],
-        "displayName": "Consent",
-        "name": "consentConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
-          {
-            "selectItems": [
-              {
-                "displayValue": "Grant",
-                "value": "grant"
-              },
-              {
-                "displayValue": "Withdraw",
-                "value": "withdraw"
-              }
-            ],
-            "displayName": "Consent Type",
-            "simpleValueType": true,
-            "name": "consentType",
-            "type": "SELECT"
-          },
-          {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "consentParams",
-            "simpleTableColumns": [
-              {
-                "selectItems": [
-                  {
-                    "displayValue": "id",
-                    "value": "id"
-                  },
-                  {
-                    "displayValue": "version",
-                    "value": "version"
-                  },
-                  {
-                    "displayValue": "name",
-                    "value": "name"
-                  },
-                  {
-                    "displayValue": "description",
-                    "value": "description"
-                  },
-                  {
-                    "displayValue": "expiry",
-                    "value": "expiry"
-                  },
-                  {
-                    "displayValue": "all",
-                    "value": "all"
-                  }
-                ],
-                "defaultValue": "id",
                 "displayName": "Parameter Name",
                 "name": "name",
                 "isUnique": true,
@@ -2053,47 +1959,6 @@ switch (data.eventType) {
         elementContent: params.elementContent,
       };
     }
-    break;
-  case 'trackConsent':
-    if (!paramObj) {
-      paramObj = data.consentParams;
-      if (!paramObj || !paramObj.length)
-        return fail('No parameters provided for consent hit!');
-      paramObj = makeTableMap(paramObj, 'name', 'value');
-    }
-
-    parameters = {
-      id: paramObj.id,
-      version: paramObj.version,
-      name: paramObj.name,
-      description: paramObj.description,
-      all: paramObj.all || false,
-      expiry: paramObj.expiry,
-    };
-
-    if (data.consentType === 'grant') {
-      // Validate hit
-      if (!paramObj.id) return fail('Missing "id" from consent grant hit.');
-      if (!paramObj.version)
-        return fail('Missing "version" from consent grant hit.');
-
-      commandName = 'trackConsentGranted';
-      parameters.expiry = paramObj.expiry;
-    } else {
-      // Validate hit
-      if (!paramObj.all && !paramObj.id && !paramObj.version)
-        return fail(
-          'Must have either "id" and "version", or "all" set to true, in consent withdraw hit.'
-        );
-      if (!paramObj.all && (!paramObj.id || !paramObj.version))
-        return fail(
-          'Must have both "id" and "version" if "all" false in consent withdraw hit.'
-        );
-
-      commandName = 'trackConsentWithdrawn';
-      parameters.all = paramObj.all || false;
-    }
-
     break;
   case 'formTracking':
     const formConfig = {
