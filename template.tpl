@@ -9,8 +9,8 @@ Google may provide), as modified from time to time.
 ___INFO___
 
 {
-  "displayName": "Snowplow v3",
-  "description": "Load, configure, and deploy the Snowplow JavaScript tracker library (v3).",
+  "displayName": "Snowplow v4",
+  "description": "Load, configure, and deploy the Snowplow JavaScript tracker library (v4).",
   "__wm": "VGVtcGxhdGUtQXV0aG9yX1Nub3dwbG93QW5hbHl0aWNzVjNUYWctU2ltby1BaGF2YQ\u003d\u003d",
   "securityGroups": [],
   "categories": [
@@ -39,6 +39,10 @@ ___TEMPLATE_PARAMETERS___
       {
         "displayValue": "Ad Tracking",
         "value": "adTracking"
+      },
+      {
+        "value": "enableButtonClickTracking",
+        "displayValue": "Button Click Tracking"
       },
       {
         "displayValue": "Cart Tracking",
@@ -136,6 +140,11 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "eventType",
         "type": "EQUALS",
         "paramValue": "trackError"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "enableButtonClickTracking",
+        "type": "EQUALS"
       }
     ],
     "displayName": "Parameter Configuration",
@@ -1072,6 +1081,46 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "GROUP",
+    "name": "buttonClickTrackingConfig",
+    "displayName": "Filter",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "buttonClickTrackingFilterChoice",
+        "displayName": "Filter Type",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "allowlist",
+            "displayValue": "Allow"
+          },
+          {
+            "value": "denylist",
+            "displayValue": "Deny"
+          }
+        ],
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "buttonClickTrackingFilters",
+        "displayName": "Classes",
+        "simpleValueType": true,
+        "help": "A comma-seperated list of HTML class names for filtering.",
+        "valueHint": "htmlClass, secondHtmlClass"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "enableButtonClickTracking",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "enablingConditions": [
       {
         "paramName": "eventType",
@@ -1787,6 +1836,7 @@ switch (data.eventType) {
     commandName = data.adTrackingType;
     parameters = paramObj;
     break;
+    
   case 'cartTracking':
     if (!paramObj) {
       paramObj = data.cartTrackingParams;
@@ -1804,6 +1854,7 @@ switch (data.eventType) {
     commandName = data.cartTrackingType;
     parameters = paramObj;
     break;
+    
   case 'trackError':
     if (!paramObj) {
       paramObj = data.errorTrackingParams;
@@ -1818,6 +1869,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackSiteSearch':
     if (!paramObj) {
       paramObj = data.siteSearchParams;
@@ -1837,6 +1889,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackPageView':
     if (data.pageViewEnablePageActivity) {
       const callback = data.pageViewActivityCallback !== 'no' && getType(data.pageViewActivityCallback) === 'function' ? data.pageViewActivityCallback : null;
@@ -1863,6 +1916,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters.title = data.pageViewPageTitle;
     break;
+    
   case 'trackStructEvent':
     if (!paramObj) {
       paramObj = data.structEventParams;
@@ -1879,6 +1933,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackSelfDescribingEvent':
     if (!paramObj) {
       paramObj = data.selfDescribingEventParams || [];
@@ -1896,6 +1951,7 @@ switch (data.eventType) {
       },
     };
     break;
+    
   case 'trackSocialInteraction':
     if (!paramObj) {
       paramObj = data.socialInteractionParams;
@@ -1912,6 +1968,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'linkTracking':
     if (data.linkTrackingType === 'enableLinkClickTracking') {
       const filter = {};
@@ -1960,6 +2017,7 @@ switch (data.eventType) {
       };
     }
     break;
+  
   case 'formTracking':
     const formConfig = {
       forms: {},
@@ -1987,6 +2045,7 @@ switch (data.eventType) {
       options: formConfig,
     };
     break;
+    
   case 'trackTiming':
     if (!paramObj) {
       paramObj = data.timingParams;
@@ -2002,6 +2061,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'enhancedEcommerce':
     let ecom;
     // Use dataLayer if available, otherwise use variable
@@ -2023,6 +2083,58 @@ switch (data.eventType) {
       return fail('Unable to track any valid Enhanced Ecommerce event.');
     }
     break;
+    
+  case 'enableButtonClickTracking':
+    let filters = data.buttonClickTrackingFilters;
+    // Enable tracking with no filter if not present
+    if (data.buttonClickTrackingFilters === undefined) {
+      commandName = data.eventType;
+      break;
+    }
+    
+    // Don't enable tracking for any other falsey values
+    if (!data.buttonClickTrackingFilters) {
+      return fail("Invalid value '" + filters + "' for button click filters");
+    }
+    
+    const filterType = getType(filters);
+    if (filterType === "string") {
+      filters = data.buttonClickTrackingFilters
+      .trim()
+      .split(",")
+      .map(f => f.trim());
+      
+    // The filter can be set with a variable, if it's an array we check that all elements are strings
+    } else if (filterType === 'array') {
+      const isStringArray = filters.every(f => getType(f) === "string");
+      if (isStringArray) {
+        filters = data.buttonClickTrackingFilters;
+      } else {
+        return fail("Non-string value present in filter array provided.");
+      }
+
+    // Reject any other type 
+    } else {
+      return fail(
+        "Unsupported type '" + filterType + "' for button click filter."
+      ); 
+    }
+
+    // An empty filter array would result in no events, as there is
+    // nothing in the array for the button classes to check against
+    if (!filters.length) {
+      break;
+    }
+    
+    // Only set commandName once we have a valid filter list
+    commandName = data.eventType;
+    const choice = data.buttonClickTrackingFilterChoice;
+    const filter = {};
+    filter[choice] = filters;
+    parameters = {filter: filter};
+
+    break;
+
   case 'customCommand':
     // Process custom commands and send each to tracker object with provided arguments
     const commands =
@@ -2032,6 +2144,9 @@ switch (data.eventType) {
     });
     break;
 }
+
+
+
 
 const mkCustomContexts = (tagConfig) => {
   const zeroVal = [];
@@ -2830,6 +2945,23 @@ scenarios:
     runCode(mockData);
     assertThat(actualCommands).isEqualTo(expectedEECCommands);
     assertApi('gtmOnSuccess').wasCalled();
+- name: Button Click Tracking
+  code: "mockData.eventType = \"enableButtonClickTracking\";\nmockData.buttonClickTrackingFilterChoice\
+    \ = \"allowlist\";\n\nconst check = (input, expected) => {\n  mockData.buttonClickTrackingFilters\
+    \ = input;\n  mock('copyFromWindow', (key) => {\n    if (key === mockData.globalName)\
+    \ {\n      return (command, parameters) => {\n        if (command === 'newTracker')\
+    \ return;\n        // Command should only be set if there's a value for the filter\
+    \ list, or the filter list is not set by the user (undefined).\n        if (expected.filter\
+    \ || input === undefined) { assertThat(command).isEqualTo(\"enableButtonClickTracking:test\"\
+    );\n                                                       }\n        else {\n\
+    \          assertThat(command).isEqualTo(\":test\");\n        }\n        assertThat(parameters).isEqualTo(expected);\n\
+    \      };\n    }\n  });\n\n  runCode(mockData);\n};\n\n// String should get split\
+    \ by ','\ncheck('a,b,c', {filter: {allowlist: [\"a\", \"b\", \"c\"]}});\n\n//\
+    \ Empty string - no filter\ncheck('', {});\n\n// Array should be used as-is if\
+    \ all elements strings\ncheck(['a', 'b', 'c'], {filter: {allowlist: [\"a\", \"\
+    b\", \"c\"]}});\n\n// Empty array - no filter\ncheck([], {});\n\n// Array with\
+    \ non-string values - no filter\ncheck(['a', 1], {});\n\n// Any other types -\
+    \ no filter\ncheck(undefined, {});\ncheck(1, {});\ncheck({}, {});\n\n   "
 setup: |-
   const log = require('logToConsole');
 
