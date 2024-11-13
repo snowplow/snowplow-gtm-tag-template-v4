@@ -49,6 +49,10 @@ ___TEMPLATE_PARAMETERS___
         "value": "cartTracking"
       },
       {
+        "displayValue": "Enhanced Consent",
+        "value": "trackConsent"
+      },
+      {
         "displayValue": "Enhanced Ecommerce",
         "value": "enhancedEcommerce"
       },
@@ -144,6 +148,11 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "eventType",
         "paramValue": "enableButtonClickTracking",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackConsent",
         "type": "EQUALS"
       }
     ],
@@ -1121,6 +1130,233 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "GROUP",
+    "name": "enhancedConsentConfig",
+    "displayName": "Consent",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "consentType",
+        "displayName": "Consent Type",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "trackConsentAllow",
+            "displayValue": "Allow All"
+          },
+          {
+            "value": "trackConsentSelected",
+            "displayValue": "Allow Selected"
+          },
+          {
+            "value": "trackConsentPending",
+            "displayValue": "Pending"
+          },
+          {
+            "value": "trackConsentImplicit",
+            "displayValue": "Implicit"
+          },
+          {
+            "value": "trackConsentDeny",
+            "displayValue": "Deny"
+          },
+          {
+            "value": "trackConsentExpired",
+            "displayValue": "Expired"
+          },
+          {
+            "value": "trackConsentWithdrawn",
+            "displayValue": "Withdrawn"
+          }
+        ],
+        "simpleValueType": true
+      },
+      {
+        "type": "SELECT",
+        "name": "basisForProcessing",
+        "displayName": "Basis For Processing",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "consent",
+            "displayValue": "Consent"
+          },
+          {
+            "value": "contract",
+            "displayValue": "Contract"
+          },
+          {
+            "value": "legal_obligation",
+            "displayValue": "Legal Obligation"
+          },
+          {
+            "value": "vital_interests",
+            "displayValue": "Vital Interests"
+          },
+          {
+            "value": "public_task",
+            "displayValue": "Public Task"
+          },
+          {
+            "value": "legitimate_interests",
+            "displayValue": "Legitimate Interests"
+          }
+        ],
+        "simpleValueType": true,
+        "help": "GDPR lawful basis for data collection \u0026 processing."
+      },
+      {
+        "type": "TEXT",
+        "name": "consentUrl",
+        "displayName": "Consent URL",
+        "simpleValueType": true,
+        "help": "URI of the privacy policy related document.",
+        "valueHint": "https://www.example.com",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "consentVersion",
+        "displayName": "Consent Version",
+        "simpleValueType": true,
+        "help": "Version of the privacy policy related document.",
+        "valueHint": "1.0",
+        "valueValidators": [
+          {
+            "type": "STRING_LENGTH",
+            "args": [
+              1,
+              16
+            ]
+          },
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "domainsApplied",
+        "displayName": "Domains Applied",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "URI",
+            "name": "domainAppliedURI",
+            "type": "TEXT",
+            "valueHint": "https://example.com",
+            "isUnique": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "help": "The domains for which this consent allows these preferences to persist to.",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "SELECT",
+        "name": "gdprApplies",
+        "displayName": "GDPR Applies",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": true,
+            "displayValue": "True"
+          },
+          {
+            "value": false,
+            "displayValue": "False"
+          }
+        ],
+        "simpleValueType": true,
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "defaultValue": false
+      },
+      {
+        "type": "GROUP",
+        "name": "scope",
+        "displayName": "Consent Scopes",
+        "groupStyle": "NO_ZIPPY",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "addGrantedTagConsents",
+            "displayName": "Add Tag Manager consent types",
+            "macrosInSelect": true,
+            "selectItems": [
+              {
+                "value": true,
+                "displayValue": "True"
+              },
+              {
+                "value": false,
+                "displayValue": "False"
+              }
+            ],
+            "simpleValueType": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "defaultValue": false,
+            "help": "Add the granted consent types provided by Tag Manager to Consent Scopes when the event is sent."
+          },
+          {
+            "type": "SIMPLE_TABLE",
+            "name": "consentScopes",
+            "displayName": "",
+            "simpleTableColumns": [
+              {
+                "defaultValue": "",
+                "displayName": "Scopes",
+                "name": "consentScope",
+                "type": "TEXT",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ],
+                "isUnique": true,
+                "valueHint": ""
+              }
+            ],
+            "help": "The scopes allowed after the user finalized his selection of consent preferences.",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "help": "The scopes allowed after the user finalized his selection of consent preferences. (e.g. analytics, functional, advertisement)"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "trackConsent",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "enablingConditions": [
       {
         "paramName": "eventType",
@@ -1531,6 +1767,7 @@ const copyFromWindow = require('copyFromWindow');
 const createQueue = require('createQueue');
 const getType = require('getType');
 const injectScript = require('injectScript');
+const isConsentGranted = require('isConsentGranted');
 const log = require('logToConsole');
 const makeInteger = require('makeInteger');
 const makeNumber = require('makeNumber');
@@ -1538,6 +1775,7 @@ const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 const setInWindow = require('setInWindow');
 const templateStorage = require('templateStorage');
+const Object = require("Object");
 
 // Constants
 const UNPKG =
@@ -1549,8 +1787,17 @@ const JSDELIVR =
   data.version +
   '/dist/sp.min.js';
 const SNOWPLOW_TRACKER_LIST = 'snowplow_tracker_list';
-const ERROR_LOG_PREFIX = '[ERROR GTM / Snowplow v3] ';
+const ERROR_LOG_PREFIX = '[ERROR GTM / Snowplow v4] ';
 const GLOBALNAME = 'snowplow';
+
+const fail = (msg) => {
+  log(ERROR_LOG_PREFIX + msg);
+  return data.gtmOnFailure();
+};
+
+if (data.trackerConfigurationVariable === 'select') {
+  fail('Snowplow v4 configuration variable not provided. Check the tracker initilisation option in your tag.');
+}
 
 // Create a list of initialized trackers
 const trackerList = templateStorage.getItem(SNOWPLOW_TRACKER_LIST) || [];
@@ -1579,11 +1826,6 @@ const getSp = () => {
 const tracker = getSp();
 
 // Helpers
-const fail = (msg) => {
-  log(ERROR_LOG_PREFIX + msg);
-  return data.gtmOnFailure();
-};
-
 const normalize = (val) => {
   if (val === 'null') return null;
   if (val === 'true') return true;
@@ -2134,6 +2376,61 @@ switch (data.eventType) {
     parameters = {filter: filter};
 
     break;
+    
+  case 'trackConsent':
+    const required = [
+      'consentScopes',
+      'basisForProcessing',
+      'consentUrl',
+      'consentVersion',
+      'domainsApplied',
+     ];
+    
+    const undefinedValues = required.filter(r => data[r] === undefined);
+    if (undefinedValues.length) {
+      return fail('Undefined fields in Consent tracking: ' + undefinedValues);
+    }
+      
+    commandName = data.consentType;
+    
+    // Domains/Scopes will be a list of single-element objects from the input table
+    // Parses:
+    // [{foo: 'bar'}, {foo: 'baz'}]
+    // to
+    // ['bar', 'baz']
+    //
+    // Or if the value is an array, will flatten:
+    // [{foo: ['bar', 'baz'], {foo: 'faz'}]
+    // to
+    // ['bar', 'baz', 'faz']
+    const domains = data.domainsApplied.reduce((a, x) => {
+      x = Object.values(x)[0];
+      return getType(x) === 'array' ? a.concat(x) : a.concat([x]);
+    }, []);
+    
+    const scopes = data.consentScopes
+    .reduce((a, x) => {
+      x = Object.values(x)[0];
+      return getType(x) === 'array' ? a.concat(x) : a.concat([x]);
+    }, [])
+    .concat(data.addGrantedTagConsents ? [
+      "ad_storage",
+      "analytics_storage",
+      "functionality_storage",
+      "personalization_storage",
+      "security_storage",
+    ].filter(isConsentGranted) : []);
+
+    parameters = {
+      consentScopes: scopes,
+      basisForProcessing: data.basisForProcessing,
+      consentUrl: data.consentUrl,
+      consentVersion: data.consentVersion,
+      domainsApplied: domains,
+      gdprApplies: normalize(data.gdprApplies),
+    };
+
+    break;
 
   case 'customCommand':
     // Process custom commands and send each to tracker object with provided arguments
@@ -2544,6 +2841,183 @@ ___WEB_PERMISSIONS___
         "versionId": "1"
       },
       "param": []
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_consent",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "consentTypes",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "analytics_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "functionality_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "personalization_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "security_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
     },
     "isRequired": true
   }
