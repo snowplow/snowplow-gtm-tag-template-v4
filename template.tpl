@@ -104,99 +104,78 @@ ___TEMPLATE_PARAMETERS___
     "type": "SELECT"
   },
   {
+    "help": "Choose a Google Tag Manager variable that returns an object of key-value pairs that will then be encoded as the parameters for this hit. Select \"No\" if you want to add the parameters manually.",
+    "macrosInSelect": true,
+    "selectItems": [
+      {
+        "displayValue": "No",
+        "value": "no"
+      }
+    ],
+    "displayName": "Retrieve Parameters From Variable",
+    "simpleValueType": true,
+    "name": "paramsFromVariable",
+    "type": "SELECT",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "adTracking",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "cartTracking",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackError",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSelfDescribingEvent",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSiteSearch",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSocialInteraction",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackStructEvent",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackTiming",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "enablingConditions": [
       {
         "paramName": "eventType",
         "type": "EQUALS",
         "paramValue": "trackStructEvent"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSelfDescribingEvent"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSocialInteraction"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "adTracking"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "cartTracking"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSiteSearch"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackTiming"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackError"
-      },
-      {
-        "paramName": "eventType",
-        "paramValue": "enableButtonClickTracking",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "eventType",
-        "paramValue": "trackConsent",
-        "type": "EQUALS"
       }
     ],
-    "displayName": "Parameter Configuration",
-    "name": "paramConfig",
-    "groupStyle": "ZIPPY_OPEN",
+    "name": "structEventConfig",
     "type": "GROUP",
     "subParams": [
       {
-        "help": "Choose a Google Tag Manager variable that returns an object of key-value pairs that will then be encoded as the parameters for this hit. Select \"No\" if you want to add the parameters manually.",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "displayValue": "No",
-            "value": "no"
-          }
-        ],
-        "displayName": "Retrieve Parameters From Variable",
-        "simpleValueType": true,
-        "name": "paramsFromVariable",
-        "type": "SELECT"
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-structured-events\"\u003eRead more\u003c/a\u003e about Structured Events.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackStructEvent"
-          }
-        ],
-        "displayName": "Structured Event",
-        "name": "structEventConfig",
-        "groupStyle": "NO_ZIPPY",
         "type": "GROUP",
+        "name": "structEvent",
+        "displayName": "Structured Event",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "structEventParams",
             "simpleTableColumns": [
               {
@@ -238,84 +217,89 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-self-describing-events\"\u003eRead more\u003c/a\u003e about Self-describing Events.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-structured-events\"\u003eRead more\u003c/a\u003e about Structured Events.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSelfDescribingEvent"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-self-describing-events\"\u003eRead more\u003c/a\u003e about Self-describing Events.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSelfDescribingEvent"
+      }
+    ],
+    "displayName": "Self-describing Event",
+    "name": "selfDescribingEventConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
           }
         ],
-        "displayName": "Self-describing Event",
-        "name": "selfDescribingEventConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        "displayName": "Schema URL",
+        "simpleValueType": true,
+        "name": "selfDescribingEventSchemaUrl",
+        "type": "TEXT"
+      },
+      {
+        "enablingConditions": [
           {
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              }
-            ],
-            "displayName": "Schema URL",
-            "simpleValueType": true,
-            "name": "selfDescribingEventSchemaUrl",
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "selfDescribingEventParams",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Parameter name",
+            "name": "name",
+            "isUnique": true,
             "type": "TEXT"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "selfDescribingEventParams",
-            "simpleTableColumns": [
-              {
-                "defaultValue": "",
-                "displayName": "Parameter name",
-                "name": "name",
-                "isUnique": true,
-                "type": "TEXT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#social-tracking\"\u003eRead more\u003c/a\u003e about Social Interaction tracking.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSocialInteraction"
+            "defaultValue": "",
+            "displayName": "Parameter value",
+            "name": "value",
+            "type": "TEXT"
           }
         ],
-        "displayName": "Social Interaction",
-        "name": "socialInteractionConfig",
-        "groupStyle": "NO_ZIPPY",
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSocialInteraction"
+      }
+    ],
+    "name": "socialInteractionConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
+        "name": "socialInteraction",
+        "displayName": "Social Interaction",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "socialInteractionParams",
             "simpleTableColumns": [
               {
@@ -349,239 +333,244 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#ad-tracking-methods\"\u003eRead more\u003c/a\u003e about Ad Tracking.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#social-tracking\"\u003eRead more\u003c/a\u003e about Social Interaction tracking.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "adTracking"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Ad Tracking",
-        "name": "adTrackingConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        ]
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#ad-tracking-methods\"\u003eRead more\u003c/a\u003e about Ad Tracking.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "adTracking"
+      }
+    ],
+    "displayName": "Ad Tracking",
+    "name": "adTrackingConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "macrosInSelect": false,
-            "selectItems": [
-              {
-                "displayValue": "Impression",
-                "value": "trackAdImpression"
-              },
-              {
-                "displayValue": "Click",
-                "value": "trackAdClick"
-              },
-              {
-                "displayValue": "Conversion",
-                "value": "trackAdConversion"
-              }
-            ],
-            "displayName": "Ad Tracking Type",
-            "defaultValue": "trackAdImpression",
-            "simpleValueType": true,
-            "name": "adTrackingType",
-            "type": "SELECT"
+            "displayValue": "Impression",
+            "value": "trackAdImpression"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "adTrackingParams",
-            "simpleTableColumns": [
-              {
-                "selectItems": [
-                  {
-                    "displayValue": "action",
-                    "value": "action"
-                  },
-                  {
-                    "displayValue": "advertiserId",
-                    "value": "advertiserId"
-                  },
-                  {
-                    "displayValue": "bannerId",
-                    "value": "bannerId"
-                  },
-                  {
-                    "displayValue": "campaignId",
-                    "value": "campaignId"
-                  },
-                  {
-                    "displayValue": "category",
-                    "value": "category"
-                  },
-                  {
-                    "displayValue": "conversionId",
-                    "value": "conversionId"
-                  },
-                  {
-                    "displayValue": "clickId",
-                    "value": "clickId"
-                  },
-                  {
-                    "displayValue": "cost",
-                    "value": "cost"
-                  },
-                  {
-                    "displayValue": "costModel",
-                    "value": "costModel"
-                  },
-                  {
-                    "displayValue": "impressionId",
-                    "value": "impressionId"
-                  },
-                  {
-                    "displayValue": "initialValue",
-                    "value": "initialValue"
-                  },
-                  {
-                    "displayValue": "property",
-                    "value": "property"
-                  },
-                  {
-                    "displayValue": "targetUrl",
-                    "value": "targetUrl"
-                  },
-                  {
-                    "displayValue": "zoneId",
-                    "value": "zoneId"
-                  }
-                ],
-                "defaultValue": "advertiserId",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#trackaddtocartandtrackremovefromcart\"\u003eRead more\u003c/a\u003e about Ecommerce Tracking.",
-        "enablingConditions": [
+            "displayValue": "Click",
+            "value": "trackAdClick"
+          },
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "cartTracking"
+            "displayValue": "Conversion",
+            "value": "trackAdConversion"
           }
         ],
-        "displayName": "Cart Tracking",
-        "name": "cartTrackingConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        "displayName": "Ad Tracking Type",
+        "defaultValue": "trackAdImpression",
+        "simpleValueType": true,
+        "name": "adTrackingType",
+        "type": "SELECT"
+      },
+      {
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "adTrackingParams",
+        "simpleTableColumns": [
           {
             "selectItems": [
               {
-                "displayValue": "Add To Cart",
-                "value": "trackAddToCart"
+                "displayValue": "action",
+                "value": "action"
               },
               {
-                "displayValue": "Remove From Cart",
-                "value": "trackRemoveFromCart"
+                "displayValue": "advertiserId",
+                "value": "advertiserId"
+              },
+              {
+                "displayValue": "bannerId",
+                "value": "bannerId"
+              },
+              {
+                "displayValue": "campaignId",
+                "value": "campaignId"
+              },
+              {
+                "displayValue": "category",
+                "value": "category"
+              },
+              {
+                "displayValue": "conversionId",
+                "value": "conversionId"
+              },
+              {
+                "displayValue": "clickId",
+                "value": "clickId"
+              },
+              {
+                "displayValue": "cost",
+                "value": "cost"
+              },
+              {
+                "displayValue": "costModel",
+                "value": "costModel"
+              },
+              {
+                "displayValue": "impressionId",
+                "value": "impressionId"
+              },
+              {
+                "displayValue": "initialValue",
+                "value": "initialValue"
+              },
+              {
+                "displayValue": "property",
+                "value": "property"
+              },
+              {
+                "displayValue": "targetUrl",
+                "value": "targetUrl"
+              },
+              {
+                "displayValue": "zoneId",
+                "value": "zoneId"
               }
             ],
-            "displayName": "Tracking Type",
-            "simpleValueType": true,
-            "name": "cartTrackingType",
+            "defaultValue": "advertiserId",
+            "displayName": "Parameter Name",
+            "name": "name",
+            "isUnique": true,
             "type": "SELECT"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "cartTrackingParams",
-            "simpleTableColumns": [
-              {
-                "valueValidators": [],
-                "selectItems": [
-                  {
-                    "displayValue": "sku (required)",
-                    "value": "sku"
-                  },
-                  {
-                    "displayValue": "unitPrice (required)",
-                    "value": "unitPrice"
-                  },
-                  {
-                    "displayValue": "quantity (required)",
-                    "value": "quantity"
-                  },
-                  {
-                    "displayValue": "name",
-                    "value": "name"
-                  },
-                  {
-                    "displayValue": "category",
-                    "value": "category"
-                  },
-                  {
-                    "displayValue": "currency",
-                    "value": "currency"
-                  }
-                ],
-                "defaultValue": "sku",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracksitesearch\"\u003eRead more\u003c/a\u003e about Site Search tracking.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSiteSearch"
+            "defaultValue": "",
+            "displayName": "Parameter Value",
+            "name": "value",
+            "type": "TEXT"
           }
         ],
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#trackaddtocartandtrackremovefromcart\"\u003eRead more\u003c/a\u003e about Ecommerce Tracking.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "cartTracking"
+      }
+    ],
+    "displayName": "Cart Tracking",
+    "name": "cartTrackingConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "selectItems": [
+          {
+            "displayValue": "Add To Cart",
+            "value": "trackAddToCart"
+          },
+          {
+            "displayValue": "Remove From Cart",
+            "value": "trackRemoveFromCart"
+          }
+        ],
+        "displayName": "Tracking Type",
+        "simpleValueType": true,
+        "name": "cartTrackingType",
+        "type": "SELECT"
+      },
+      {
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "cartTrackingParams",
+        "simpleTableColumns": [
+          {
+            "valueValidators": [],
+            "selectItems": [
+              {
+                "displayValue": "sku (required)",
+                "value": "sku"
+              },
+              {
+                "displayValue": "unitPrice (required)",
+                "value": "unitPrice"
+              },
+              {
+                "displayValue": "quantity (required)",
+                "value": "quantity"
+              },
+              {
+                "displayValue": "name",
+                "value": "name"
+              },
+              {
+                "displayValue": "category",
+                "value": "category"
+              },
+              {
+                "displayValue": "currency",
+                "value": "currency"
+              }
+            ],
+            "defaultValue": "sku",
+            "displayName": "Parameter Name",
+            "name": "name",
+            "isUnique": true,
+            "type": "SELECT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Parameter Value",
+            "name": "value",
+            "type": "TEXT"
+          }
+        ],
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSiteSearch"
+      }
+    ],
+    "name": "siteSearchConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "type": "GROUP",
+        "name": "siteSearch",
         "displayName": "Site Search",
-        "name": "siteSearchConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "siteSearchParams",
             "simpleTableColumns": [
               {
@@ -619,30 +608,35 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracktiming\"\u003eRead more\u003c/a\u003e about tracking Timing hits.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracksitesearch\"\u003eRead more\u003c/a\u003e about Site Search tracking.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackTiming"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Timing",
-        "name": "timingConfig",
-        "groupStyle": "NO_ZIPPY",
+        ]
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackTiming"
+      }
+    ],
+    "name": "timingConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
+        "name": "timing",
+        "displayName": "Timing",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "timingParams",
             "simpleTableColumns": [
               {
@@ -680,21 +674,33 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#error-tracking\"\u003eRead more\u003c/a\u003e about tracking error events.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracktiming\"\u003eRead more\u003c/a\u003e about tracking Timing hits.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackError"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Error Tracking",
-        "name": "errorConfig",
-        "groupStyle": "NO_ZIPPY",
+        ]
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackError"
+      }
+    ],
+    "name": "errorConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
+        "name": "errorTracking",
+        "displayName": "Error Tracking",
         "subParams": [
           {
             "name": "errorTrackingParams",
@@ -738,6 +744,14 @@ ___TEMPLATE_PARAMETERS___
             ],
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
+          }
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#error-tracking\"\u003eRead more\u003c/a\u003e about tracking error events.",
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
         ]
       }
