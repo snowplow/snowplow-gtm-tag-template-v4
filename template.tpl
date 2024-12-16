@@ -1,4 +1,4 @@
-___TERMS_OF_SERVICE___
+﻿___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -9,8 +9,8 @@ Google may provide), as modified from time to time.
 ___INFO___
 
 {
-  "displayName": "Snowplow v3",
-  "description": "Load, configure, and deploy the Snowplow JavaScript tracker library (v3).",
+  "displayName": "Snowplow v4",
+  "description": "Load, configure, and deploy the Snowplow JavaScript tracker library (v4).",
   "__wm": "VGVtcGxhdGUtQXV0aG9yX1Nub3dwbG93QW5hbHl0aWNzVjNUYWctU2ltby1BaGF2YQ\u003d\u003d",
   "securityGroups": [],
   "categories": [
@@ -41,8 +41,16 @@ ___TEMPLATE_PARAMETERS___
         "value": "adTracking"
       },
       {
+        "value": "enableButtonClickTracking",
+        "displayValue": "Button Click Tracking"
+      },
+      {
         "displayValue": "Cart Tracking",
         "value": "cartTracking"
+      },
+      {
+        "displayValue": "Enhanced Consent",
+        "value": "trackConsent"
       },
       {
         "displayValue": "Enhanced Ecommerce",
@@ -59,10 +67,6 @@ ___TEMPLATE_PARAMETERS___
       {
         "displayValue": "Link Click Tracking",
         "value": "linkTracking"
-      },
-      {
-        "displayValue": "Consent",
-        "value": "trackConsent"
       },
       {
         "displayValue": "Page View",
@@ -100,94 +104,78 @@ ___TEMPLATE_PARAMETERS___
     "type": "SELECT"
   },
   {
+    "help": "Choose a Google Tag Manager variable that returns an object of key-value pairs that will then be encoded as the parameters for this hit. Select \"No\" if you want to add the parameters manually.",
+    "macrosInSelect": true,
+    "selectItems": [
+      {
+        "displayValue": "No",
+        "value": "no"
+      }
+    ],
+    "displayName": "Retrieve Parameters From Variable",
+    "simpleValueType": true,
+    "name": "paramsFromVariable",
+    "type": "SELECT",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "adTracking",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "cartTracking",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackError",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSelfDescribingEvent",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSiteSearch",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackSocialInteraction",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackStructEvent",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "eventType",
+        "paramValue": "trackTiming",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "enablingConditions": [
       {
         "paramName": "eventType",
         "type": "EQUALS",
         "paramValue": "trackStructEvent"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSelfDescribingEvent"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSocialInteraction"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "adTracking"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "cartTracking"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackSiteSearch"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackTiming"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackConsent"
-      },
-      {
-        "paramName": "eventType",
-        "type": "EQUALS",
-        "paramValue": "trackError"
       }
     ],
-    "displayName": "Parameter Configuration",
-    "name": "paramConfig",
-    "groupStyle": "ZIPPY_OPEN",
+    "name": "structEventConfig",
     "type": "GROUP",
     "subParams": [
       {
-        "help": "Choose a Google Tag Manager variable that returns an object of key-value pairs that will then be encoded as the parameters for this hit. Select \"No\" if you want to add the parameters manually.",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "displayValue": "No",
-            "value": "no"
-          }
-        ],
-        "displayName": "Retrieve Parameters From Variable",
-        "simpleValueType": true,
-        "name": "paramsFromVariable",
-        "type": "SELECT"
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-structured-events\"\u003eRead more\u003c/a\u003e about Structured Events.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackStructEvent"
-          }
-        ],
-        "displayName": "Structured Event",
-        "name": "structEventConfig",
-        "groupStyle": "NO_ZIPPY",
         "type": "GROUP",
+        "name": "structEvent",
+        "displayName": "Structured Event",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "structEventParams",
             "simpleTableColumns": [
               {
@@ -229,84 +217,89 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-self-describing-events\"\u003eRead more\u003c/a\u003e about Self-describing Events.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-structured-events\"\u003eRead more\u003c/a\u003e about Structured Events.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSelfDescribingEvent"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracking-custom-self-describing-events\"\u003eRead more\u003c/a\u003e about Self-describing Events.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSelfDescribingEvent"
+      }
+    ],
+    "displayName": "Self-describing Event",
+    "name": "selfDescribingEventConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
           }
         ],
-        "displayName": "Self-describing Event",
-        "name": "selfDescribingEventConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        "displayName": "Schema URL",
+        "simpleValueType": true,
+        "name": "selfDescribingEventSchemaUrl",
+        "type": "TEXT"
+      },
+      {
+        "enablingConditions": [
           {
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              }
-            ],
-            "displayName": "Schema URL",
-            "simpleValueType": true,
-            "name": "selfDescribingEventSchemaUrl",
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "selfDescribingEventParams",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Parameter name",
+            "name": "name",
+            "isUnique": true,
             "type": "TEXT"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "selfDescribingEventParams",
-            "simpleTableColumns": [
-              {
-                "defaultValue": "",
-                "displayName": "Parameter name",
-                "name": "name",
-                "isUnique": true,
-                "type": "TEXT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#social-tracking\"\u003eRead more\u003c/a\u003e about Social Interaction tracking.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSocialInteraction"
+            "defaultValue": "",
+            "displayName": "Parameter value",
+            "name": "value",
+            "type": "TEXT"
           }
         ],
-        "displayName": "Social Interaction",
-        "name": "socialInteractionConfig",
-        "groupStyle": "NO_ZIPPY",
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSocialInteraction"
+      }
+    ],
+    "name": "socialInteractionConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
+        "name": "socialInteraction",
+        "displayName": "Social Interaction",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "socialInteractionParams",
             "simpleTableColumns": [
               {
@@ -340,239 +333,244 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#ad-tracking-methods\"\u003eRead more\u003c/a\u003e about Ad Tracking.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#social-tracking\"\u003eRead more\u003c/a\u003e about Social Interaction tracking.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "adTracking"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Ad Tracking",
-        "name": "adTrackingConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        ]
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#ad-tracking-methods\"\u003eRead more\u003c/a\u003e about Ad Tracking.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "adTracking"
+      }
+    ],
+    "displayName": "Ad Tracking",
+    "name": "adTrackingConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "macrosInSelect": false,
-            "selectItems": [
-              {
-                "displayValue": "Impression",
-                "value": "trackAdImpression"
-              },
-              {
-                "displayValue": "Click",
-                "value": "trackAdClick"
-              },
-              {
-                "displayValue": "Conversion",
-                "value": "trackAdConversion"
-              }
-            ],
-            "displayName": "Ad Tracking Type",
-            "defaultValue": "trackAdImpression",
-            "simpleValueType": true,
-            "name": "adTrackingType",
-            "type": "SELECT"
+            "displayValue": "Impression",
+            "value": "trackAdImpression"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "adTrackingParams",
-            "simpleTableColumns": [
-              {
-                "selectItems": [
-                  {
-                    "displayValue": "action",
-                    "value": "action"
-                  },
-                  {
-                    "displayValue": "advertiserId",
-                    "value": "advertiserId"
-                  },
-                  {
-                    "displayValue": "bannerId",
-                    "value": "bannerId"
-                  },
-                  {
-                    "displayValue": "campaignId",
-                    "value": "campaignId"
-                  },
-                  {
-                    "displayValue": "category",
-                    "value": "category"
-                  },
-                  {
-                    "displayValue": "conversionId",
-                    "value": "conversionId"
-                  },
-                  {
-                    "displayValue": "clickId",
-                    "value": "clickId"
-                  },
-                  {
-                    "displayValue": "cost",
-                    "value": "cost"
-                  },
-                  {
-                    "displayValue": "costModel",
-                    "value": "costModel"
-                  },
-                  {
-                    "displayValue": "impressionId",
-                    "value": "impressionId"
-                  },
-                  {
-                    "displayValue": "initialValue",
-                    "value": "initialValue"
-                  },
-                  {
-                    "displayValue": "property",
-                    "value": "property"
-                  },
-                  {
-                    "displayValue": "targetUrl",
-                    "value": "targetUrl"
-                  },
-                  {
-                    "displayValue": "zoneId",
-                    "value": "zoneId"
-                  }
-                ],
-                "defaultValue": "advertiserId",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#trackaddtocartandtrackremovefromcart\"\u003eRead more\u003c/a\u003e about Ecommerce Tracking.",
-        "enablingConditions": [
+            "displayValue": "Click",
+            "value": "trackAdClick"
+          },
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "cartTracking"
+            "displayValue": "Conversion",
+            "value": "trackAdConversion"
           }
         ],
-        "displayName": "Cart Tracking",
-        "name": "cartTrackingConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
-        "subParams": [
+        "displayName": "Ad Tracking Type",
+        "defaultValue": "trackAdImpression",
+        "simpleValueType": true,
+        "name": "adTrackingType",
+        "type": "SELECT"
+      },
+      {
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "adTrackingParams",
+        "simpleTableColumns": [
           {
             "selectItems": [
               {
-                "displayValue": "Add To Cart",
-                "value": "trackAddToCart"
+                "displayValue": "action",
+                "value": "action"
               },
               {
-                "displayValue": "Remove From Cart",
-                "value": "trackRemoveFromCart"
+                "displayValue": "advertiserId",
+                "value": "advertiserId"
+              },
+              {
+                "displayValue": "bannerId",
+                "value": "bannerId"
+              },
+              {
+                "displayValue": "campaignId",
+                "value": "campaignId"
+              },
+              {
+                "displayValue": "category",
+                "value": "category"
+              },
+              {
+                "displayValue": "conversionId",
+                "value": "conversionId"
+              },
+              {
+                "displayValue": "clickId",
+                "value": "clickId"
+              },
+              {
+                "displayValue": "cost",
+                "value": "cost"
+              },
+              {
+                "displayValue": "costModel",
+                "value": "costModel"
+              },
+              {
+                "displayValue": "impressionId",
+                "value": "impressionId"
+              },
+              {
+                "displayValue": "initialValue",
+                "value": "initialValue"
+              },
+              {
+                "displayValue": "property",
+                "value": "property"
+              },
+              {
+                "displayValue": "targetUrl",
+                "value": "targetUrl"
+              },
+              {
+                "displayValue": "zoneId",
+                "value": "zoneId"
               }
             ],
-            "displayName": "Tracking Type",
-            "simpleValueType": true,
-            "name": "cartTrackingType",
+            "defaultValue": "advertiserId",
+            "displayName": "Parameter Name",
+            "name": "name",
+            "isUnique": true,
             "type": "SELECT"
           },
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "cartTrackingParams",
-            "simpleTableColumns": [
-              {
-                "valueValidators": [],
-                "selectItems": [
-                  {
-                    "displayValue": "sku (required)",
-                    "value": "sku"
-                  },
-                  {
-                    "displayValue": "unitPrice (required)",
-                    "value": "unitPrice"
-                  },
-                  {
-                    "displayValue": "quantity (required)",
-                    "value": "quantity"
-                  },
-                  {
-                    "displayValue": "name",
-                    "value": "name"
-                  },
-                  {
-                    "displayValue": "category",
-                    "value": "category"
-                  },
-                  {
-                    "displayValue": "currency",
-                    "value": "currency"
-                  }
-                ],
-                "defaultValue": "sku",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracksitesearch\"\u003eRead more\u003c/a\u003e about Site Search tracking.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackSiteSearch"
+            "defaultValue": "",
+            "displayName": "Parameter Value",
+            "name": "value",
+            "type": "TEXT"
           }
         ],
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#trackaddtocartandtrackremovefromcart\"\u003eRead more\u003c/a\u003e about Ecommerce Tracking.",
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "cartTracking"
+      }
+    ],
+    "displayName": "Cart Tracking",
+    "name": "cartTrackingConfig",
+    "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "selectItems": [
+          {
+            "displayValue": "Add To Cart",
+            "value": "trackAddToCart"
+          },
+          {
+            "displayValue": "Remove From Cart",
+            "value": "trackRemoveFromCart"
+          }
+        ],
+        "displayName": "Tracking Type",
+        "simpleValueType": true,
+        "name": "cartTrackingType",
+        "type": "SELECT"
+      },
+      {
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "type": "EQUALS",
+            "paramValue": "no"
+          }
+        ],
+        "name": "cartTrackingParams",
+        "simpleTableColumns": [
+          {
+            "valueValidators": [],
+            "selectItems": [
+              {
+                "displayValue": "sku (required)",
+                "value": "sku"
+              },
+              {
+                "displayValue": "unitPrice (required)",
+                "value": "unitPrice"
+              },
+              {
+                "displayValue": "quantity (required)",
+                "value": "quantity"
+              },
+              {
+                "displayValue": "name",
+                "value": "name"
+              },
+              {
+                "displayValue": "category",
+                "value": "category"
+              },
+              {
+                "displayValue": "currency",
+                "value": "currency"
+              }
+            ],
+            "defaultValue": "sku",
+            "displayName": "Parameter Name",
+            "name": "name",
+            "isUnique": true,
+            "type": "SELECT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Parameter Value",
+            "name": "value",
+            "type": "TEXT"
+          }
+        ],
+        "type": "SIMPLE_TABLE",
+        "newRowButtonText": "Add Parameter"
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackSiteSearch"
+      }
+    ],
+    "name": "siteSearchConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
+        "type": "GROUP",
+        "name": "siteSearch",
         "displayName": "Site Search",
-        "name": "siteSearchConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "siteSearchParams",
             "simpleTableColumns": [
               {
@@ -610,30 +608,35 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracktiming\"\u003eRead more\u003c/a\u003e about tracking Timing hits.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracksitesearch\"\u003eRead more\u003c/a\u003e about Site Search tracking.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackTiming"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Timing",
-        "name": "timingConfig",
-        "groupStyle": "NO_ZIPPY",
+        ]
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackTiming"
+      }
+    ],
+    "name": "timingConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
+        "name": "timing",
+        "displayName": "Timing",
         "subParams": [
           {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
             "name": "timingParams",
             "simpleTableColumns": [
               {
@@ -671,106 +674,33 @@ ___TEMPLATE_PARAMETERS___
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
           }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#consent-tracking\"\u003eRead more\u003c/a\u003e about tracking Consent status.",
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#tracktiming\"\u003eRead more\u003c/a\u003e about tracking Timing hits.",
         "enablingConditions": [
           {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackConsent"
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
-        ],
-        "displayName": "Consent",
-        "name": "consentConfig",
-        "groupStyle": "NO_ZIPPY",
+        ]
+      }
+    ]
+  },
+  {
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "type": "EQUALS",
+        "paramValue": "trackError"
+      }
+    ],
+    "name": "errorConfig",
+    "type": "GROUP",
+    "subParams": [
+      {
         "type": "GROUP",
-        "subParams": [
-          {
-            "selectItems": [
-              {
-                "displayValue": "Grant",
-                "value": "grant"
-              },
-              {
-                "displayValue": "Withdraw",
-                "value": "withdraw"
-              }
-            ],
-            "displayName": "Consent Type",
-            "simpleValueType": true,
-            "name": "consentType",
-            "type": "SELECT"
-          },
-          {
-            "enablingConditions": [
-              {
-                "paramName": "paramsFromVariable",
-                "type": "EQUALS",
-                "paramValue": "no"
-              }
-            ],
-            "name": "consentParams",
-            "simpleTableColumns": [
-              {
-                "selectItems": [
-                  {
-                    "displayValue": "id",
-                    "value": "id"
-                  },
-                  {
-                    "displayValue": "version",
-                    "value": "version"
-                  },
-                  {
-                    "displayValue": "name",
-                    "value": "name"
-                  },
-                  {
-                    "displayValue": "description",
-                    "value": "description"
-                  },
-                  {
-                    "displayValue": "expiry",
-                    "value": "expiry"
-                  },
-                  {
-                    "displayValue": "all",
-                    "value": "all"
-                  }
-                ],
-                "defaultValue": "id",
-                "displayName": "Parameter Name",
-                "name": "name",
-                "isUnique": true,
-                "type": "SELECT"
-              },
-              {
-                "defaultValue": "",
-                "displayName": "Parameter Value",
-                "name": "value",
-                "type": "TEXT"
-              }
-            ],
-            "type": "SIMPLE_TABLE",
-            "newRowButtonText": "Add Parameter"
-          }
-        ]
-      },
-      {
-        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#error-tracking\"\u003eRead more\u003c/a\u003e about tracking error events.",
-        "enablingConditions": [
-          {
-            "paramName": "eventType",
-            "type": "EQUALS",
-            "paramValue": "trackError"
-          }
-        ],
+        "name": "errorTracking",
         "displayName": "Error Tracking",
-        "name": "errorConfig",
-        "groupStyle": "NO_ZIPPY",
-        "type": "GROUP",
         "subParams": [
           {
             "name": "errorTrackingParams",
@@ -814,6 +744,14 @@ ___TEMPLATE_PARAMETERS___
             ],
             "type": "SIMPLE_TABLE",
             "newRowButtonText": "Add Parameter"
+          }
+        ],
+        "help": "\u003ca href\u003d\"https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracking-events/#error-tracking\"\u003eRead more\u003c/a\u003e about tracking error events.",
+        "enablingConditions": [
+          {
+            "paramName": "paramsFromVariable",
+            "paramValue": "no",
+            "type": "EQUALS"
           }
         ]
       }
@@ -1162,6 +1100,273 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "name": "enhancedEcommerceVariable",
         "type": "SELECT"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "buttonClickTrackingConfig",
+    "displayName": "Filter",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "buttonClickTrackingFilterChoice",
+        "displayName": "Filter Type",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "allowlist",
+            "displayValue": "Allow"
+          },
+          {
+            "value": "denylist",
+            "displayValue": "Deny"
+          }
+        ],
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "buttonClickTrackingFilters",
+        "displayName": "Classes",
+        "simpleValueType": true,
+        "help": "A comma-seperated list of HTML class names for filtering.",
+        "valueHint": "htmlClass, secondHtmlClass"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "enableButtonClickTracking",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "enhancedConsentConfig",
+    "displayName": "Consent",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "consentType",
+        "displayName": "Consent Type",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "trackConsentAllow",
+            "displayValue": "Allow All"
+          },
+          {
+            "value": "trackConsentSelected",
+            "displayValue": "Allow Selected"
+          },
+          {
+            "value": "trackConsentPending",
+            "displayValue": "Pending"
+          },
+          {
+            "value": "trackConsentImplicit",
+            "displayValue": "Implicit"
+          },
+          {
+            "value": "trackConsentDeny",
+            "displayValue": "Deny"
+          },
+          {
+            "value": "trackConsentExpired",
+            "displayValue": "Expired"
+          },
+          {
+            "value": "trackConsentWithdrawn",
+            "displayValue": "Withdrawn"
+          }
+        ],
+        "simpleValueType": true
+      },
+      {
+        "type": "SELECT",
+        "name": "basisForProcessing",
+        "displayName": "Basis For Processing",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "consent",
+            "displayValue": "Consent"
+          },
+          {
+            "value": "contract",
+            "displayValue": "Contract"
+          },
+          {
+            "value": "legal_obligation",
+            "displayValue": "Legal Obligation"
+          },
+          {
+            "value": "vital_interests",
+            "displayValue": "Vital Interests"
+          },
+          {
+            "value": "public_task",
+            "displayValue": "Public Task"
+          },
+          {
+            "value": "legitimate_interests",
+            "displayValue": "Legitimate Interests"
+          }
+        ],
+        "simpleValueType": true,
+        "help": "GDPR lawful basis for data collection \u0026 processing."
+      },
+      {
+        "type": "TEXT",
+        "name": "consentUrl",
+        "displayName": "Consent URL",
+        "simpleValueType": true,
+        "help": "URI of the privacy policy related document.",
+        "valueHint": "https://www.example.com",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "consentVersion",
+        "displayName": "Consent Version",
+        "simpleValueType": true,
+        "help": "Version of the privacy policy related document.",
+        "valueHint": "1.0",
+        "valueValidators": [
+          {
+            "type": "STRING_LENGTH",
+            "args": [
+              1,
+              16
+            ]
+          },
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "domainsApplied",
+        "displayName": "Domains Applied",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "URI",
+            "name": "domainAppliedURI",
+            "type": "TEXT",
+            "valueHint": "https://example.com",
+            "isUnique": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "help": "The domains for which this consent allows these preferences to persist to.",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
+      },
+      {
+        "type": "SELECT",
+        "name": "gdprApplies",
+        "displayName": "GDPR Applies",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": true,
+            "displayValue": "True"
+          },
+          {
+            "value": false,
+            "displayValue": "False"
+          }
+        ],
+        "simpleValueType": true,
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "defaultValue": false
+      },
+      {
+        "type": "GROUP",
+        "name": "scope",
+        "displayName": "Consent Scopes",
+        "groupStyle": "NO_ZIPPY",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "addGrantedTagConsents",
+            "displayName": "Add Tag Manager consent types",
+            "macrosInSelect": true,
+            "selectItems": [
+              {
+                "value": true,
+                "displayValue": "True"
+              },
+              {
+                "value": false,
+                "displayValue": "False"
+              }
+            ],
+            "simpleValueType": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "defaultValue": false,
+            "help": "Add the granted consent types provided by Tag Manager to Consent Scopes when the event is sent."
+          },
+          {
+            "type": "SIMPLE_TABLE",
+            "name": "consentScopes",
+            "displayName": "",
+            "simpleTableColumns": [
+              {
+                "defaultValue": "",
+                "displayName": "Scopes",
+                "name": "consentScope",
+                "type": "TEXT",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ],
+                "isUnique": true,
+                "valueHint": ""
+              }
+            ],
+            "help": "The scopes allowed after the user finalized his selection of consent preferences.",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "help": "The scopes allowed after the user finalized his selection of consent preferences. (e.g. analytics, functional, advertisement)"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "eventType",
+        "paramValue": "trackConsent",
+        "type": "EQUALS"
       }
     ]
   },
@@ -1576,6 +1781,7 @@ const copyFromWindow = require('copyFromWindow');
 const createQueue = require('createQueue');
 const getType = require('getType');
 const injectScript = require('injectScript');
+const isConsentGranted = require('isConsentGranted');
 const log = require('logToConsole');
 const makeInteger = require('makeInteger');
 const makeNumber = require('makeNumber');
@@ -1583,6 +1789,7 @@ const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 const setInWindow = require('setInWindow');
 const templateStorage = require('templateStorage');
+const Object = require("Object");
 
 // Constants
 const UNPKG =
@@ -1594,8 +1801,17 @@ const JSDELIVR =
   data.version +
   '/dist/sp.min.js';
 const SNOWPLOW_TRACKER_LIST = 'snowplow_tracker_list';
-const ERROR_LOG_PREFIX = '[ERROR GTM / Snowplow v3] ';
+const ERROR_LOG_PREFIX = '[ERROR GTM / Snowplow v4] ';
 const GLOBALNAME = 'snowplow';
+
+const fail = (msg) => {
+  log(ERROR_LOG_PREFIX + msg);
+  return data.gtmOnFailure();
+};
+
+if (data.trackerConfigurationVariable === 'select') {
+  fail('Snowplow v4 configuration variable not provided. Check the tracker initilisation option in your tag.');
+}
 
 // Create a list of initialized trackers
 const trackerList = templateStorage.getItem(SNOWPLOW_TRACKER_LIST) || [];
@@ -1624,11 +1840,6 @@ const getSp = () => {
 const tracker = getSp();
 
 // Helpers
-const fail = (msg) => {
-  log(ERROR_LOG_PREFIX + msg);
-  return data.gtmOnFailure();
-};
-
 const normalize = (val) => {
   if (val === 'null') return null;
   if (val === 'true') return true;
@@ -1881,6 +2092,7 @@ switch (data.eventType) {
     commandName = data.adTrackingType;
     parameters = paramObj;
     break;
+    
   case 'cartTracking':
     if (!paramObj) {
       paramObj = data.cartTrackingParams;
@@ -1898,6 +2110,7 @@ switch (data.eventType) {
     commandName = data.cartTrackingType;
     parameters = paramObj;
     break;
+    
   case 'trackError':
     if (!paramObj) {
       paramObj = data.errorTrackingParams;
@@ -1912,6 +2125,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackSiteSearch':
     if (!paramObj) {
       paramObj = data.siteSearchParams;
@@ -1931,6 +2145,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackPageView':
     if (data.pageViewEnablePageActivity) {
       const callback = data.pageViewActivityCallback !== 'no' && getType(data.pageViewActivityCallback) === 'function' ? data.pageViewActivityCallback : null;
@@ -1957,6 +2172,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters.title = data.pageViewPageTitle;
     break;
+    
   case 'trackStructEvent':
     if (!paramObj) {
       paramObj = data.structEventParams;
@@ -1973,6 +2189,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'trackSelfDescribingEvent':
     if (!paramObj) {
       paramObj = data.selfDescribingEventParams || [];
@@ -1990,6 +2207,7 @@ switch (data.eventType) {
       },
     };
     break;
+    
   case 'trackSocialInteraction':
     if (!paramObj) {
       paramObj = data.socialInteractionParams;
@@ -2006,6 +2224,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'linkTracking':
     if (data.linkTrackingType === 'enableLinkClickTracking') {
       const filter = {};
@@ -2054,47 +2273,7 @@ switch (data.eventType) {
       };
     }
     break;
-  case 'trackConsent':
-    if (!paramObj) {
-      paramObj = data.consentParams;
-      if (!paramObj || !paramObj.length)
-        return fail('No parameters provided for consent hit!');
-      paramObj = makeTableMap(paramObj, 'name', 'value');
-    }
-
-    parameters = {
-      id: paramObj.id,
-      version: paramObj.version,
-      name: paramObj.name,
-      description: paramObj.description,
-      all: paramObj.all || false,
-      expiry: paramObj.expiry,
-    };
-
-    if (data.consentType === 'grant') {
-      // Validate hit
-      if (!paramObj.id) return fail('Missing "id" from consent grant hit.');
-      if (!paramObj.version)
-        return fail('Missing "version" from consent grant hit.');
-
-      commandName = 'trackConsentGranted';
-      parameters.expiry = paramObj.expiry;
-    } else {
-      // Validate hit
-      if (!paramObj.all && !paramObj.id && !paramObj.version)
-        return fail(
-          'Must have either "id" and "version", or "all" set to true, in consent withdraw hit.'
-        );
-      if (!paramObj.all && (!paramObj.id || !paramObj.version))
-        return fail(
-          'Must have both "id" and "version" if "all" false in consent withdraw hit.'
-        );
-
-      commandName = 'trackConsentWithdrawn';
-      parameters.all = paramObj.all || false;
-    }
-
-    break;
+  
   case 'formTracking':
     const formConfig = {
       forms: {},
@@ -2122,6 +2301,7 @@ switch (data.eventType) {
       options: formConfig,
     };
     break;
+    
   case 'trackTiming':
     if (!paramObj) {
       paramObj = data.timingParams;
@@ -2137,6 +2317,7 @@ switch (data.eventType) {
     commandName = data.eventType;
     parameters = paramObj;
     break;
+    
   case 'enhancedEcommerce':
     let ecom;
     // Use dataLayer if available, otherwise use variable
@@ -2158,6 +2339,113 @@ switch (data.eventType) {
       return fail('Unable to track any valid Enhanced Ecommerce event.');
     }
     break;
+    
+  case 'enableButtonClickTracking':
+    let filters = data.buttonClickTrackingFilters;
+    // Enable tracking with no filter if not present
+    if (data.buttonClickTrackingFilters === undefined) {
+      commandName = data.eventType;
+      break;
+    }
+    
+    // Don't enable tracking for any other falsey values
+    if (!data.buttonClickTrackingFilters) {
+      return fail("Invalid value '" + filters + "' for button click filters");
+    }
+    
+    const filterType = getType(filters);
+    if (filterType === "string") {
+      filters = data.buttonClickTrackingFilters
+      .trim()
+      .split(",")
+      .map(f => f.trim());
+      
+    // The filter can be set with a variable, if it's an array we check that all elements are strings
+    } else if (filterType === 'array') {
+      const isStringArray = filters.every(f => getType(f) === "string");
+      if (isStringArray) {
+        filters = data.buttonClickTrackingFilters;
+      } else {
+        return fail("Non-string value present in filter array provided.");
+      }
+
+    // Reject any other type 
+    } else {
+      return fail(
+        "Unsupported type '" + filterType + "' for button click filter."
+      ); 
+    }
+
+    // An empty filter array would result in no events, as there is
+    // nothing in the array for the button classes to check against
+    if (!filters.length) {
+      break;
+    }
+    
+    // Only set commandName once we have a valid filter list
+    commandName = data.eventType;
+    const choice = data.buttonClickTrackingFilterChoice;
+    const filter = {};
+    filter[choice] = filters;
+    parameters = {filter: filter};
+
+    break;
+    
+  case 'trackConsent':
+    const required = [
+      'consentScopes',
+      'basisForProcessing',
+      'consentUrl',
+      'consentVersion',
+      'domainsApplied',
+     ];
+    
+    const undefinedValues = required.filter(r => data[r] === undefined);
+    if (undefinedValues.length) {
+      return fail('Undefined fields in Consent tracking: ' + undefinedValues);
+    }
+      
+    commandName = data.consentType;
+    
+    // Domains/Scopes will be a list of single-element objects from the input table
+    // Parses:
+    // [{foo: 'bar'}, {foo: 'baz'}]
+    // to
+    // ['bar', 'baz']
+    //
+    // Or if the value is an array, will flatten:
+    // [{foo: ['bar', 'baz'], {foo: 'faz'}]
+    // to
+    // ['bar', 'baz', 'faz']
+    const domains = data.domainsApplied.reduce((a, x) => {
+      x = Object.values(x)[0];
+      return getType(x) === 'array' ? a.concat(x) : a.concat([x]);
+    }, []);
+    
+    const scopes = data.consentScopes
+    .reduce((a, x) => {
+      x = Object.values(x)[0];
+      return getType(x) === 'array' ? a.concat(x) : a.concat([x]);
+    }, [])
+    .concat(data.addGrantedTagConsents ? [
+      "ad_storage",
+      "analytics_storage",
+      "functionality_storage",
+      "personalization_storage",
+      "security_storage",
+    ].filter(isConsentGranted) : []);
+
+    parameters = {
+      consentScopes: scopes,
+      basisForProcessing: data.basisForProcessing,
+      consentUrl: data.consentUrl,
+      consentVersion: data.consentVersion,
+      domainsApplied: domains,
+      gdprApplies: normalize(data.gdprApplies),
+    };
+
+    break;
+
   case 'customCommand':
     // Process custom commands and send each to tracker object with provided arguments
     const commands =
@@ -2167,6 +2455,9 @@ switch (data.eventType) {
     });
     break;
 }
+
+
+
 
 const mkCustomContexts = (tagConfig) => {
   const zeroVal = [];
@@ -2564,6 +2855,183 @@ ___WEB_PERMISSIONS___
         "versionId": "1"
       },
       "param": []
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_consent",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "consentTypes",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "analytics_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "functionality_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "personalization_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "security_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
     },
     "isRequired": true
   }
@@ -2965,6 +3433,23 @@ scenarios:
     runCode(mockData);
     assertThat(actualCommands).isEqualTo(expectedEECCommands);
     assertApi('gtmOnSuccess').wasCalled();
+- name: Button Click Tracking
+  code: "mockData.eventType = \"enableButtonClickTracking\";\nmockData.buttonClickTrackingFilterChoice\
+    \ = \"allowlist\";\n\nconst check = (input, expected) => {\n  mockData.buttonClickTrackingFilters\
+    \ = input;\n  mock('copyFromWindow', (key) => {\n    if (key === mockData.globalName)\
+    \ {\n      return (command, parameters) => {\n        if (command === 'newTracker')\
+    \ return;\n        // Command should only be set if there's a value for the filter\
+    \ list, or the filter list is not set by the user (undefined).\n        if (expected.filter\
+    \ || input === undefined) { assertThat(command).isEqualTo(\"enableButtonClickTracking:test\"\
+    );\n                                                       }\n        else {\n\
+    \          assertThat(command).isEqualTo(\":test\");\n        }\n        assertThat(parameters).isEqualTo(expected);\n\
+    \      };\n    }\n  });\n\n  runCode(mockData);\n};\n\n// String should get split\
+    \ by ','\ncheck('a,b,c', {filter: {allowlist: [\"a\", \"b\", \"c\"]}});\n\n//\
+    \ Empty string - no filter\ncheck('', {});\n\n// Array should be used as-is if\
+    \ all elements strings\ncheck(['a', 'b', 'c'], {filter: {allowlist: [\"a\", \"\
+    b\", \"c\"]}});\n\n// Empty array - no filter\ncheck([], {});\n\n// Array with\
+    \ non-string values - no filter\ncheck(['a', 1], {});\n\n// Any other types -\
+    \ no filter\ncheck(undefined, {});\ncheck(1, {});\ncheck({}, {});\n\n   "
 setup: |-
   const log = require('logToConsole');
 
